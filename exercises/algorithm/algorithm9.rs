@@ -2,11 +2,11 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
 
+#[derive(Debug)]
 pub struct Heap<T>
 where
     T: Default,
@@ -37,7 +37,16 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+        let mut index = self.count;
+        while index > 1 {
+            let parent_idx = self.parent_idx(index);
+            if !(self.comparator)(&self.items[index], &self.items[parent_idx]) {
+                self.items.swap(parent_idx, index);
+            }
+            index = parent_idx;
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +67,7 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        0
     }
 }
 
@@ -77,18 +86,23 @@ where
     }
 }
 
-impl<T> Iterator for Heap<T>
+impl<T:Clone> Iterator for Heap<T>
 where
-    T: Default,
+    T: Default + Clone,
 {
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.count == 0 {
+            return None;
+        }
+        self.count -= 1;
+        self.items.pop()
+        // self.heapify_down();
     }
 }
 
+#[derive(Debug)]
 pub struct MinHeap;
 
 impl MinHeap {
@@ -101,6 +115,7 @@ impl MinHeap {
     }
 }
 
+#[derive(Debug)]
 pub struct MaxHeap;
 
 impl MaxHeap {
@@ -130,9 +145,13 @@ mod tests {
         heap.add(9);
         heap.add(11);
         assert_eq!(heap.len(), 4);
+        println!("{:?}", heap);
         assert_eq!(heap.next(), Some(2));
+        println!("{:?}", heap);
         assert_eq!(heap.next(), Some(4));
+        println!("{:?}", heap);
         assert_eq!(heap.next(), Some(9));
+        println!("{:?}", heap);
         heap.add(1);
         assert_eq!(heap.next(), Some(1));
     }
@@ -145,6 +164,7 @@ mod tests {
         heap.add(9);
         heap.add(11);
         assert_eq!(heap.len(), 4);
+        println!("{:?}", heap);
         assert_eq!(heap.next(), Some(11));
         assert_eq!(heap.next(), Some(9));
         assert_eq!(heap.next(), Some(4));

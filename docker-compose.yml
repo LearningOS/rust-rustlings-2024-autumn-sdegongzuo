@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  rustrustlings2024autumnsdegongzuo:
+    image: rustrustlings2024autumnsdegongzuo
+    build:
+      context: .
+      dockerfile: ./Dockerfile
